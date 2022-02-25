@@ -29,7 +29,13 @@ _Things that I've found looking into the code_
 - **MvcTestingAppManifest.json**
   - Apparently this could be the configurations for the Acceptance tests, not sure how it works because I could not see any reference from it in a simple search
   - I would like to test it to see if it is possible to override the appsettings from the API without mirror it on the acceptance project
-  - It also seems could be an option for the .NET 6 issue regarding the multiple appsettings during the publish.
+  - It also seems could be an option for the .NET 6 issue regarding the multiple appsettings during the publish. [Generate error for duplicate files in publish output](https://docs.microsoft.com/en-us/dotnet/core/compatibility/sdk/6.0/duplicate-files-in-output)
+- **Environment**
+  - Inside the WebApplicationFactory I could see that in many places the application has been set to `Environment.Development` so it means that this way it is not possible to test the application against the `Production` environment. I don't know yet what the implications of that
+    - How about the targeting, this will affect some how maybe this changes from `Debug` to `Release` somewhere that I'm not aware about it yet
+- **services.SwapTransient**
+  - inside the _builder.ConfigureTestServices_ it is possible to swap services this could be useful once integrating with external dependencies
+  - it is an extension method from `Microsoft.AspNetCore.TestHost`
 
 
 Questions that I've:
@@ -40,7 +46,14 @@ Questions that I've:
 - Does this way influence somehow the API behavior ?
 - There are any project using it on a CI/CD environment?
 - About the AppSettings.Json, today it is necessary to mirror the API settings in order to have the API working properly
-  - Again is this the expected behavior or only a bad implementation from my side?
+  - Again is this the expected behavior or only a bad implementation from my side?  
+
+Solving the questions:
+
+- _Question:_ In my current projects/executions I see that in sometimes the Startup are loaded 2x
+  - Using a TestFixture directly from xUnit without SpecFlow I could not see this behavior, maybe it could be related
+  - Still not solved, I could not reproduce the behavior with simple project [IntegrationTestLearning](https://github.com/afborgesDev/testingMyLearns/tree/main/integrationTestLearning/IntegrationTestLearning)
+  - Maybe this could be related to IClassFixture
 
 ## Scenarios
 ## Tools
