@@ -4,6 +4,7 @@ title: Integration tests .Net Core
 categories: [testing, integration]
 tags: [.NET]
 comments: true
+mermaid: true
 ---
 
 # Integration tests for .NET applications
@@ -37,6 +38,22 @@ _Things that I've found looking into the code_
   - inside the _builder.ConfigureTestServices_ it is possible to swap services this could be useful once integrating with external dependencies
   - it is an extension method from `Microsoft.AspNetCore.TestHost`
 
+<div class="mermaid">
+  graph LR;
+    A[WebApplicationFactory] --> |EntryPoint| B(Startup or Program)
+    B --> C[TestServer]
+    C -.Optional.-> E(Inject services)
+    C -.Optional.-> F(Configure)
+    C -.Optional.-> G(Swap or remove services)
+    E & F & G --> H[Run in memory server]
+</div>
+
+## WebApplicationFactory Flow
+
+How does the WebApplicationFactory works:
+
+1) For startup the application it infer the application path based on the EntryPoint with could be the Startup or in minimal API the Program.cs   
+
 
 Questions that I've:
 
@@ -57,3 +74,5 @@ Solving the questions:
 
 ## Scenarios
 ## Tools
+
+<script src="/assets/mermaid/mermaid.min.js"/>
