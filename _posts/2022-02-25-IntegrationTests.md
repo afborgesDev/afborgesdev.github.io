@@ -38,6 +38,10 @@ _Things that I've found looking into the code_
   - inside the _builder.ConfigureTestServices_ it is possible to swap services this could be useful once integrating with external dependencies
   - it is an extension method from `Microsoft.AspNetCore.TestHost`
 
+## WebApplicationFactory Flow
+
+How does the WebApplicationFactory works:
+
 <div class="mermaid">
   graph LR;
     A[WebApplicationFactory] --> |EntryPoint| B(Startup or Program)
@@ -48,12 +52,15 @@ _Things that I've found looking into the code_
     E & F & G --> H[Run in memory server]
 </div>
 
-## WebApplicationFactory Flow
-
-How does the WebApplicationFactory works:
-
 1) For startup the application it infer the application path based on the EntryPoint with could be the Startup or in minimal API the Program.cs   
+2) There's an extension method inside `WebHostBuilderExtensions.UseTestServer` for `IWebHostBuilder`, with after determine with application should be hosted, it say to the host it is a test server 
+   1) So I assume here is where everything are going to the memory
+   2) I don't know yet the implication of it, regarding the target for `Debug` or `Release` I also assume that it is `Debug` but the question is does it change anything else?
+   3) This extension performs an: `services.AddSingleton<IServer, TestServer>();`
+3) This bootstrap process also creates an `RedirectHandler` and configure it inside the HttpClient that has been created, this is how the request for `http://localhost` are been redirected to the InMemory server
 
+
+--- 
 
 Questions that I've:
 
